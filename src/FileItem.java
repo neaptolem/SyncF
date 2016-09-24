@@ -18,15 +18,17 @@ public class FileItem {
     }
 
     public boolean equals(FileItem fileItem) {
-        if (fileItem == null) {
-            return false;
-        }
-        if (Objects.equals(fileItem.getData(),this.data)&&Objects.equals(fileItem.getDate(),this.date))
-            return true;
-        return false;
+        return fileItem != null && Objects.equals(fileItem.getData(), this.data) && Objects.equals(fileItem.getDate(), this.date);
     }
     @Override
     public String toString() {
         return this.data + "\n" + this.date.getTime();
+    }
+
+    public FileItem copy() {
+        String s = this.data;
+        Date d = new Date(this.date.getTime());
+        return new FileItem(s, d);
+
     }
 }

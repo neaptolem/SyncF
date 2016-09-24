@@ -4,8 +4,8 @@ import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
 public class CustomFile {
-    private ArrayList<FileItem> data=new ArrayList<FileItem>();
-    private List<ChangeHandler> listener=new ArrayList<ChangeHandler>();
+    private ArrayList<FileItem> data = new ArrayList<>();
+    private List<ChangeHandler> listener = new ArrayList<>();
     private ReaderFromFile readerFromFile=new ReaderFromFile("sync.txt");
     private WriterToFile writerToFile=new WriterToFile("sync.txt");
     private Lock lock=new ReentrantLock();
@@ -23,18 +23,10 @@ public class CustomFile {
         lock.unlock();
     }
 
-    public void setData(ArrayList<FileItem> data) {
-        lock.lock();
-        if(! this.equals(data)){
-            this.data=data;
-            onChange();
-        }
-        lock.unlock();
-    }
-
     public void addToListener(ChangeHandler changeHandler){
         listener.add(changeHandler);
     }
+
     public void compare(){
         lock.lock();
         ArrayList<FileItem> fileItems=readerFromFile.readFile();
@@ -54,6 +46,7 @@ public class CustomFile {
         lock.unlock();
         return s;
     }
+
     @Override
     public String toString(){
         lock.lock();
@@ -64,11 +57,13 @@ public class CustomFile {
         lock.unlock();
         return s;
     }
+
     private void onChange(){
         for(ChangeHandler item:listener){
             item.onChange();
         }
     }
+
     private boolean equals(ArrayList<FileItem> fileItems){
         int size = Math.max(fileItems.size(), this.data.size());
         for (int i = 0; i < size; i++) {
@@ -77,5 +72,40 @@ public class CustomFile {
             }
         }
         return true;
+    }
+
+    public boolean equals(CustomFile customFile) {
+        ArrayList<FileItem> customFileData = customFile.getData();
+        int size = Math.max(customFileData.size(), this.data.size());
+        for (int i = 0; i < size; i++) {
+            if (!(this.data.get(i)).equals(customFileData.get(i))) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private ArrayList<FileItem> getData() {
+        return this.data;
+    }
+
+    public void setData(ArrayList<FileItem> data) {
+        lock.lock();
+        if (!this.equals(data)) {
+            this.data = data;
+            onChange();
+        }
+        lock.unlock();
+    }
+
+    public CustomFile copy() {
+
+        ArrayList<FileItem> copyData = new ArrayList<>();
+        for (int i = 0; i < data.size(); i++) {
+            copyData.add(data.get(i).copy());
+        }
+        CustomFile customfile = new CustomFile();
+        customfile.data = copyData;
+        return customfile;
     }
 }
