@@ -7,7 +7,8 @@ public class CustomFile {
 
     private ArrayList<FileItem> data = new ArrayList<>();
     private List<ChangeHandler> listener = new ArrayList<>();
-    private ReaderWriteFileItem tetxtFileRW = ReaderWriterCreator.create("sync", "xml");
+    private IRWFactory rwFactory = ReaderWriterCreator.create("xml");
+    private IWriterReader writerReaderFileItem = rwFactory.createWriterReader("sync");
     private Lock lock=new ReentrantLock();
 
     CustomFile(ArrayList<FileItem> fileItemArrayList) {
@@ -19,13 +20,13 @@ public class CustomFile {
 
     public void load(){
         lock.lock();
-        data = tetxtFileRW.read();
+        data = writerReaderFileItem.read();
         onChange();
         lock.unlock();
     }
     public void save(){
         lock.lock();
-        tetxtFileRW.write(this);
+        writerReaderFileItem.write(this);
         lock.unlock();
     }
 
@@ -35,7 +36,7 @@ public class CustomFile {
 
     public void compare(){
         lock.lock();
-        ArrayList<FileItem> fileItems = tetxtFileRW.read();
+        ArrayList<FileItem> fileItems = writerReaderFileItem.read();
         if (! this.equals(fileItems)){
             this.data=fileItems;
             onChange();

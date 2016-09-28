@@ -1,10 +1,10 @@
 public class ReaderWriterCreator {
-    public static ReaderWriteFileItem create(String name, String type) {
+    public static IRWFactory create(String type) {
         switch (type) {
             case "txt":
-                return new TextFileItemsRW(name + "." + type);
+                return new TXTFactory();
             case "xml":
-                return new XMLFileItemsRW(name + "." + type);
+                return new XMLFactory();
             default:
                 throw new RuntimeException("Unsuported type of file: " + type);
         }

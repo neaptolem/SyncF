@@ -4,11 +4,11 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Date;
 
-public class TextFileItemsRW implements ReaderWriteFileItem {
+public class TXTWriterReader implements IWriterReader {
     private String fileName;
 
-    public TextFileItemsRW(String fileName) {
-        this.fileName = fileName;
+    public TXTWriterReader(String fileName) {
+        this.fileName = fileName + ".txt";
     }
 
     @Override

@@ -18,11 +18,11 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 
-public class XMLFileItemsRW implements ReaderWriteFileItem {
+public class XMLWriterReader implements IWriterReader {
     String fileName;
 
-    public XMLFileItemsRW(String fileName) {
-        this.fileName = fileName;
+    public XMLWriterReader(String fileName) {
+        this.fileName = fileName + ".xml";
     }
 
     @Override
