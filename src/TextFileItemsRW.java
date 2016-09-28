@@ -1,15 +1,18 @@
 import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Date;
 
-public class ReaderFromFile {
+public class TextFileItemsRW implements ReaderWriteFileItem {
     private String fileName;
 
-    public ReaderFromFile(String fileName) {
+    public TextFileItemsRW(String fileName) {
         this.fileName = fileName;
     }
 
-    public ArrayList<FileItem> readFile() {
+    @Override
+    public ArrayList<FileItem> read() {
         String line, line1;
         ArrayList<FileItem> file = new ArrayList<>();
         try {
@@ -39,4 +42,12 @@ public class ReaderFromFile {
         return file;
     }
 
+    @Override
+    public void write(CustomFile file) {
+        try (BufferedWriter writer = Files.newBufferedWriter(Paths.get(fileName))) {
+            writer.write(file.toString());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 }

@@ -4,22 +4,28 @@ import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
 public class CustomFile {
+
     private ArrayList<FileItem> data = new ArrayList<>();
     private List<ChangeHandler> listener = new ArrayList<>();
-    private ReaderFromFile readerFromFile=new ReaderFromFile("sync.txt");
-    private WriterToFile writerToFile=new WriterToFile("sync.txt");
+    private ReaderWriteFileItem tetxtFileRW = ReaderWriterCreator.create("sync", "xml");
     private Lock lock=new ReentrantLock();
 
+    CustomFile(ArrayList<FileItem> fileItemArrayList) {
+        this.data = fileItemArrayList;
+    }
+
+    CustomFile() {
+    }
 
     public void load(){
         lock.lock();
-        data=readerFromFile.readFile();
+        data = tetxtFileRW.read();
         onChange();
         lock.unlock();
     }
     public void save(){
         lock.lock();
-        writerToFile.writeToFile(this);
+        tetxtFileRW.write(this);
         lock.unlock();
     }
 
@@ -29,7 +35,7 @@ public class CustomFile {
 
     public void compare(){
         lock.lock();
-        ArrayList<FileItem> fileItems=readerFromFile.readFile();
+        ArrayList<FileItem> fileItems = tetxtFileRW.read();
         if (! this.equals(fileItems)){
             this.data=fileItems;
             onChange();
@@ -85,7 +91,7 @@ public class CustomFile {
         return true;
     }
 
-    private ArrayList<FileItem> getData() {
+    public ArrayList<FileItem> getData() {
         return this.data;
     }
 
